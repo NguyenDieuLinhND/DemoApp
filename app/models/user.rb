@@ -7,11 +7,18 @@ class User < ApplicationRecord
     format: {with: VALID_EMAIL_REGEX}, uniqueness: {case_sensitive: false}
   has_secure_password
   validates :password, presence: true, length: {minimum: 6}
+  validates :birthday, presence: true
+  validate :validates_birthday_compare_now
 
   private
-
   def downcase_email
-    sefl.email = email.downcase
+    self.email = email.downcase
   end
 
+  def validates_birthday_compare_now
+    errors.add :birthday, "must be in the past" if birthday.to_date >
+      Time.now.to_date
+    errors.add :birthday, "must be after 50 years ago" if birthday.to_date <=
+      Time.now.to_date - 50.years
+  end
 end
