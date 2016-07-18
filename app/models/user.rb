@@ -21,4 +21,12 @@ class User < ApplicationRecord
     errors.add :birthday, "must be after 50 years ago" if birthday.to_date <=
       Time.now.to_date - 50.years
   end
+
+  class << self
+    def digest string
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+        BCrypt::Engine.cost
+      BCrypt::Password.create(string, cost: cost)
+    end
+  end
 end
