@@ -25,6 +25,10 @@ class User < ApplicationRecord
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
 
+  def current_user? user
+    self == user
+  end
+
   private
   def downcase_email
     self.email = email.downcase
